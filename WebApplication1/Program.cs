@@ -36,6 +36,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(); // Enable Swagger UI
 }
 
+//  Always enable Swagger (even in production)
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
