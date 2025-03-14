@@ -3,6 +3,9 @@ using WebApplication1.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Add services to the container.
 //builder.Services.AddDbContext<DataContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -39,4 +42,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => "Hello, Render!"); // Test route
 app.Run();
