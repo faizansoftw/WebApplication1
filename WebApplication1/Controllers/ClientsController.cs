@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
@@ -18,9 +19,9 @@ namespace FitnessManagementApp.Controllers
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClients()
+        public async Task<ActionResult<IEnumerable<Client>>> GetClients(string search)
         {
-            return await _context.Clients.ToListAsync();
+            return await _context.Clients.Where(c => c.FullName.Contains(search) || c.Email.Contains(search) || c.PhoneNumber.Contains(search)).ToListAsync();
         }
 
         // GET: api/Clients/5
@@ -90,6 +91,55 @@ namespace FitnessManagementApp.Controllers
             _context.Clients.Remove(client);
             await _context.SaveChangesAsync();
 
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchClient(int id, [FromBody] JsonPatchDocument<Client> patchDoc)
+        {
+            // Check if the patch document is provided
+            if (patchDoc == null)
+            {
+                return BadRequest("Patch document is required.");
+            }
+
+            // Retrieve the client from the database
+            var client = await _context.Clients.FindAsync(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            // Apply the patch and handle errors by adding them to ModelState
+            patchDoc.ApplyTo(client, error =>
+            {
+                ModelState.AddModelError(error.AffectedObject.ToString(), error.ErrorMessage);
+            });
+
+            // If there were errors during patching, return them
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Save changes to the database
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Clients.Any(e => e.Id == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            // Return success with no content
             return NoContent();
         }
     }

@@ -9,6 +9,7 @@ namespace WebApplication1.Data
 
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
     }
 }
