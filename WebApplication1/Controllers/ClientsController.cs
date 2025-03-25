@@ -19,9 +19,13 @@ namespace FitnessManagementApp.Controllers
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClients(string search)
+        public async Task<ActionResult<IEnumerable<Client>>> GetClients(string? search)
         {
-            return await _context.Clients.Where(c => c.FullName.Contains(search) || c.Email.Contains(search) || c.PhoneNumber.Contains(search)).ToListAsync();
+            if (!string.IsNullOrEmpty(search))
+            {
+                return await _context.Clients.Where(c => c.FullName.Contains(search) || c.Email.Contains(search) || c.PhoneNumber.Contains(search)).ToListAsync();
+            }
+            return await _context.Clients.ToListAsync();
         }
 
         // GET: api/Clients/5
