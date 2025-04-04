@@ -146,5 +146,7 @@ namespace FitnessManagementApp.Controllers
             // Return success with no content
             return NoContent();
         }
+
+
     }
 }

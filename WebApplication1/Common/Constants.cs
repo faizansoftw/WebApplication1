@@ -10,5 +10,12 @@
             SMHP = 4,
             SMHCC = 5
         }
+
+        public enum Status : short
+        {
+            Active = 1,
+            Inactive = 2,
+            Deleted = 3
+        }
     }
 }

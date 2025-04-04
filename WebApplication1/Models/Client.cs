@@ -1,4 +1,5 @@
-﻿using static WebApplication1.Common.Constants;
+﻿using WebApplication1.Common;
+using static WebApplication1.Common.Constants;
 
 namespace WebApplication1.Models
 {
@@ -15,5 +16,6 @@ namespace WebApplication1.Models
         public DateTime? JoiningDate { get; set; }
         public DateTime? EndDate { get; set; }
         public decimal? Fee { get; set; }
+        public Constants.Status Status { get; set; }
     }
 }
